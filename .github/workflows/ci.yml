@@ -192,87 +192,87 @@ jobs:
       run: |
         echo "Adding openvpn_internal network to openvpn-server..."
         docker network connect --ip 10.10.10.100 openvpn_internal openvpn-server
-  #   - name: Building openvpn-client-bookworm image
-  #     run: |
-  #       echo "Building openvpn-client-bookworm image ..."
-  #       docker builder build \
-  #         -t openvpn-client-bookworm \
-  #         -f testing/openvpn_client_bookworm.dockerfile \
-  #         .
-  #   - name: Deploy openvpn-client-bookworm
-  #     run: |
-  #       echo "Deploying openvpn-client-bookworm container..."
-  #       docker run -d --name openvpn-client-bookworm \
-  #         -v openvpn_configs:/home/openvpn/config \
-  #         --network=openvpn_external \
-  #         --ip=192.168.200.10 \
-  #         --cap-add NET_ADMIN \
-  #         --device /dev/net/tun:/dev/net/tun \
-  #         openvpn-client-bookworm
-  #   - name: Building openvpn-client-bullseye image
-  #     run: |
-  #       echo "Building openvpn-client-bullseye image ..."
-  #       docker builder build \
-  #         -t openvpn-client-bullseye \
-  #         -f testing/openvpn_client_bullseye.dockerfile \
-  #         .
-  #   - name: Deploy openvpn-client-bullseye
-  #     run: |
-  #       echo "Deploying openvpn-client-bullseye container..."
-  #       docker run -d --name openvpn-client-bullseye \
-  #         -v openvpn_configs:/home/openvpn/config \
-  #         --network=openvpn_external \
-  #         --ip=192.168.200.20 \
-  #         --cap-add NET_ADMIN \
-  #         --device /dev/net/tun:/dev/net/tun \
-  #         openvpn-client-bullseye
-  #   - name: Building openvpn-client-jammy image
-  #     run: |
-  #       echo "Building openvpn-client-jammy image ..."
-  #       docker builder build \
-  #         -t openvpn-client-jammy \
-  #         -f testing/openvpn_client_jammy.dockerfile \
-  #         .
-  #   - name: Deploy openvpn-client-jammy
-  #     run: |
-  #       echo "Deploying openvpn-client-jammy container..."
-  #       docker run -d --name openvpn-client-jammy \
-  #         -v openvpn_configs:/home/openvpn/config \
-  #         --network=openvpn_external \
-  #         --ip=192.168.200.40 \
-  #         --cap-add NET_ADMIN \
-  #         --device /dev/net/tun:/dev/net/tun \
-  #         openvpn-client-jammy
-  #   - name: Building openvpn-protected-service image
-  #     run: |
-  #       echo "Building openvpn-protected-service image ..."
-  #       docker builder build \
-  #         -t openvpn-protected-service \
-  #         -f testing/openvpn-protected-service.dockerfile \
-  #         .
-  #   - name: Run openvpn-protected-service container
-  #     run: |
-  #       docker run \
-  #         -dit \
-  #         --name openvpn-protected-service \
-  #         --network=openvpn_internal \
-  #         --ip=10.10.10.10 \
-  #         --cap-add=NET_ADMIN \
-  #         openvpn-protected-service
-  #   - name: Run ping test
-  #     run: |
-  #       docker exec openvpn-client-bookworm ping 10.10.10.10 -c 100 -s 1300
-  #       docker exec openvpn-client-bullseye ping 10.10.10.10 -c 100 -s 1300
-  #       docker exec openvpn-client-jammy ping 10.10.10.10 -c 100 -s 1300
-  #   - name: Wait for 30 seconds
-  #     run: |
-  #       sleep 30
-  #   - name: GET exporter data
-  #     run: |
-  #       echo "# curl -vvv http://192.168.200.100:9234/metrics"
-  #       curl -vvv http://192.168.200.100:9234/metrics
-  #       echo "# curl -vvv http://192.168.200.100:9234/sessions_local"
-  #       curl -vvv http://192.168.200.100:9234/sessions_local
+    - name: Building openvpn-client-bookworm image
+      run: |
+        echo "Building openvpn-client-bookworm image ..."
+        docker builder build \
+          -t openvpn-client-bookworm \
+          -f testing/openvpn_client_bookworm.dockerfile \
+          .
+    - name: Deploy openvpn-client-bookworm
+      run: |
+        echo "Deploying openvpn-client-bookworm container..."
+        docker run -d --name openvpn-client-bookworm \
+          -v openvpn_configs:/home/openvpn/config \
+          --network=openvpn_external \
+          --ip=192.168.200.10 \
+          --cap-add NET_ADMIN \
+          --device /dev/net/tun:/dev/net/tun \
+          openvpn-client-bookworm
+    - name: Building openvpn-client-bullseye image
+      run: |
+        echo "Building openvpn-client-bullseye image ..."
+        docker builder build \
+          -t openvpn-client-bullseye \
+          -f testing/openvpn_client_bullseye.dockerfile \
+          .
+    - name: Deploy openvpn-client-bullseye
+      run: |
+        echo "Deploying openvpn-client-bullseye container..."
+        docker run -d --name openvpn-client-bullseye \
+          -v openvpn_configs:/home/openvpn/config \
+          --network=openvpn_external \
+          --ip=192.168.200.20 \
+          --cap-add NET_ADMIN \
+          --device /dev/net/tun:/dev/net/tun \
+          openvpn-client-bullseye
+    - name: Building openvpn-client-jammy image
+      run: |
+        echo "Building openvpn-client-jammy image ..."
+        docker builder build \
+          -t openvpn-client-jammy \
+          -f testing/openvpn_client_jammy.dockerfile \
+          .
+    - name: Deploy openvpn-client-jammy
+      run: |
+        echo "Deploying openvpn-client-jammy container..."
+        docker run -d --name openvpn-client-jammy \
+          -v openvpn_configs:/home/openvpn/config \
+          --network=openvpn_external \
+          --ip=192.168.200.40 \
+          --cap-add NET_ADMIN \
+          --device /dev/net/tun:/dev/net/tun \
+          openvpn-client-jammy
+    - name: Building openvpn-protected-service image
+      run: |
+        echo "Building openvpn-protected-service image ..."
+        docker builder build \
+          -t openvpn-protected-service \
+          -f testing/openvpn-protected-service.dockerfile \
+          .
+    - name: Run openvpn-protected-service container
+      run: |
+        docker run \
+          -dit \
+          --name openvpn-protected-service \
+          --network=openvpn_internal \
+          --ip=10.10.10.10 \
+          --cap-add=NET_ADMIN \
+          openvpn-protected-service
+    - name: Run ping test
+      run: |
+        docker exec openvpn-client-bookworm ping 10.10.10.10 -c 100 -s 1300
+        docker exec openvpn-client-bullseye ping 10.10.10.10 -c 100 -s 1300
+        docker exec openvpn-client-jammy ping 10.10.10.10 -c 100 -s 1300
+    - name: Wait for 30 seconds
+      run: |
+        sleep 30
+    - name: GET exporter data
+      run: |
+        echo "# curl -vvv http://192.168.200.100:9234/metrics"
+        curl -vvv http://192.168.200.100:9234/metrics
+        echo "# curl -vvv http://192.168.200.100:9234/sessions_local"
+        curl -vvv http://192.168.200.100:9234/sessions_local
   # post-clean-up:
   #   runs-on: self-hosted
   #   if: always()

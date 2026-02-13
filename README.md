@@ -8,15 +8,13 @@ Exporter used in this project is from a dedicated [repository here.](https://git
 
 ## Features
 
-- 🔒 OpenVPN 2.6.19 - Built from source for latest security features
+- 🔒 OpenVPN - Built from source for latest security features
 - 🐳 Docker-based - Easy deployment and management
 - 📊 Prometheus Metrics - Built-in OpenVPN exporter for monitoring
 - 🔄 Dual Protocol Support - Run TCP and UDP instances simultaneously
 - 🛡️ Security First - Runs as non-root user with minimal privileges
 - 📝 Flexible Configuration - Easy to customize via mounted configs
 - 🔧 iptables Support - Custom firewall rules support
-
-Note: 🔒 OpenVPN 2.7.0 - comming soon
 
 ## Configuration
 ### Required Files

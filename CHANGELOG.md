@@ -3,8 +3,9 @@ All notable changes to this project will be documented in this file.
 
 | Version | Release Date | Release Notes | Fixed | Known bugs |
 | ------- | ------------ | ------------- | ----- | ---------- |
-| v1.1.0  | 2026-02-13   | **OpenVPN Version**: 2.7.0 </br> **golang Version**: 1.25.7 </br>**Ubuntu Version**: 24.04 |  | No |
-| v1.0.5  | 2026-02-12   | **OpenVPN Version**: 2.6.19 </br> **golang Version**: 1.25.7 </br>**Ubuntu Version**: 24.04 | [CVE-2025-68121](https://nvd.nist.gov/vuln/detail/cve-2025-68121) for Golang version fixed | No |
+| v1.1.0  | 2026-02-13   | **OpenVPN Version**: 2.7.0 </br> **golang Version**: 1.25.7 </br> **Ubuntu Version**: 24.04 |  | No |
+| v1.0.6  | 2026-02-22   | **OpenVPN Version**: 2.6.19 </br> **OpenVPN Exporter Version**: 1.0.3 </br> **golang Version**: 1.25.7 </br> **Ubuntu Version**: 24.04 | New exporter version | No |
+| v1.0.5  | 2026-02-12   | **OpenVPN Version**: 2.6.19 </br> **golang Version**: 1.25.7 </br> **Ubuntu Version**: 24.04 | [CVE-2025-68121](https://nvd.nist.gov/vuln/detail/cve-2025-68121) for Golang version fixed | No |
 | v1.0.4  | 2026-02-03   | **OpenVPN Version**: 2.6.17 </br> **golang Version**: 1.25.6 </br>**Ubuntu Version**: 24.04 | Golang CVEs for 1.25.5: [CVE-2025-61726](https://avd.aquasec.com/nvd/2025/cve-2025-61726) & [CVE-2025-61728](https://avd.aquasec.com/nvd/2025/cve-2025-61728/) | No |
 | v1.0.3  | 2025-12-05   | **OpenVPN Version**: 2.6.17 </br> **golang Version**: 1.25.5 </br>**Ubuntu Version**: 24.04 </br> This is the third release, with latest OpenVPN version | [CVE-2025-61729](https://nvd.nist.gov/vuln/detail/CVE-2025-61729) | No |
 | v1.0.2  | 2025-12-01   | **OpenVPN Version**: 2.6.17 </br> **Ubuntu Version**: 24.04 </br> This is the third release, with latest OpenVPN version | [CVE-2025-13751](https://community.openvpn.net/ReleaseHistory#openvpn-2617-released-28-november-2025) | No |

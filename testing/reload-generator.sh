@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Load variables
+chmod +x versions.sh
+./versions.sh
+
 # Making sure scripts exist and are executable
 chmod +x generate_ca_and_certs.sh
 

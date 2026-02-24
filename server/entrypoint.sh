@@ -5,6 +5,7 @@ set -e # Exit on error
 COMMON_CONF="/home/openvpn/config/server-common.conf"
 TCP_CONF="/home/openvpn/config/server-tcp.conf"
 UDP_CONF="/home/openvpn/config/server-udp.conf"
+ONE_CONF="/home/openvpn/config/server.conf" # One config supporting both tcp & udp since 2.7.*
 LOG_DIR="/home/openvpn/logs"
 CONFIG_DIR="/home/openvpn/config"
 
@@ -66,6 +67,16 @@ if [ -f "$UDP_CONF" ]; then
     echo "OpenVPN UDP started with PID ${pids[-1]}"
 else
     echo "WARNING: UDP configuration not found at $UDP_CONF"
+fi
+
+# Start Common instance if config exists / since 2.7*
+if [ -f "$ONE_CONF" ]; then
+    echo "Starting OpenVPN with one configuration (both tcp & udp)..."
+    sudo openvpn --config "$ONE_CONF" &
+    pids+=($!)
+    echo "OpenVPN started with PID ${pids[-1]}"
+else
+    echo "WARNING: Configuration not found at $ONE_CONF"
 fi
 
 # Check if at least one OpenVPN instance started

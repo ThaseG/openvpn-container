@@ -1,12 +1,6 @@
 #!/bin/bash
 # Define the array of client configuration paths
 source versions.sh
-# CLIENT_CONFS=(
-#     "bookworm"
-#     "bullseye"
-#     "jammy"
-#     "focal"
-# )
 
 # Loop through each client configuration
 for CLIENT_NAME in "${CLIENT_IMAGE_VERSIONS[@]}"; do
@@ -40,16 +34,33 @@ EOF
     cat /home/openvpn/config/ca/ca.crt >> "$CLIENT_CONF"
     echo "</ca>" >> "$CLIENT_CONF"
     
-    cat >> "$CLIENT_CONF" << 'EOF'
+    # TLS directive depends on OpenVPN version
+    if [[ "${OPENVPN_VERSION}" == 2.7* ]]; then
+        cat >> "$CLIENT_CONF" << 'EOF'
+<tls-crypt>
+EOF
+        cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
+        cat >> "$CLIENT_CONF" << 'EOF'
+</tls-crypt>
+data-ciphers AES-256-GCM
+EOF
+    elif [[ "${OPENVPN_VERSION}" == 2.6* ]]; then
+        cat >> "$CLIENT_CONF" << 'EOF'
 key-direction 1
 <tls-auth>
 EOF
-    cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
-    cat >> "$CLIENT_CONF" << 'EOF'
+        cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
+        cat >> "$CLIENT_CONF" << 'EOF'
 </tls-auth>
 cipher AES-256-GCM
 data-ciphers AES-256-GCM
 data-ciphers-fallback AES-256-CBC
+EOF
+    else
+        echo "WARNING: Unsupported OPENVPN_VERSION '${OPENVPN_VERSION}', skipping TLS config for ${CLIENT_NAME}"
+    fi
+
+    cat >> "$CLIENT_CONF" << 'EOF'
 verb 3
 EOF
     

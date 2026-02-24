@@ -40,10 +40,12 @@ if [ -f "$CONFIG_DIR/iptables.sh" ]; then
     sudo "$CONFIG_DIR/iptables.sh"
 fi
 
-# Check if the common configuration file exists
-if [ ! -f "$COMMON_CONF" ]; then
-    echo "ERROR: Common configuration not found at $COMMON_CONF"
-    exit 1
+# Check if the common configuration file exists / but only in old version 2.6.*
+if [ ! -f "$ONE_CONF" ]; then
+    if [ ! -f "$COMMON_CONF" ]; then
+        echo "ERROR: Common configuration not found at $COMMON_CONF"
+        exit 1
+    fi
 fi
 
 # Array to track background PIDs

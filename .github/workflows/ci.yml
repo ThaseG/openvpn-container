@@ -121,6 +121,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker build --no-cache -t openvpn-server:latest -f ./server/openvpn.dockerfile .
+
   TEST-trivy-vulnerability-scan:
     runs-on: self-hosted
     needs: BUILD-openvpn-server-image
@@ -135,6 +136,7 @@ jobs:
           --no-progress \
           --format table \
           openvpn-server:latest
+
   TEST-e2e:
     runs-on: self-hosted
     needs: TEST-trivy-vulnerability-scan
@@ -145,6 +147,7 @@ jobs:
         echo "Creating openvpn networks"
         docker network create --subnet=192.168.200.0/24 openvpn_external
         docker network create --subnet=10.10.10.0/24 openvpn_internal
+
     - name: Create openvpn volumes
       run: |
         echo "Creating openvpn config volume"
@@ -152,6 +155,7 @@ jobs:
 
         echo "Creating openvpn logs volume"
         docker volume create openvpn_logs
+
     - name: Build OpenVPN Generator image
       run: |
         echo "Building new openvpn generator image ..."
@@ -159,6 +163,7 @@ jobs:
           -t openvpn-generator:latest \
           -f testing/openvpn_generator.dockerfile \
           .
+
     - name: Run OpenVPN Generator Container
       run: |
         echo "Running new openvpn generator container ..."
@@ -167,6 +172,7 @@ jobs:
           --name openvpn-generator \
           -v openvpn_configs:/home/openvpn/config \
           openvpn-generator:latest
+
     - name: Wait for openvpn-generator to finish
       run: |
         echo "Waiting for generator container to finish..."
@@ -175,6 +181,7 @@ jobs:
       run: |
         echo "Just for sure showing running containers..."
         docker ps | grep openvpn-generator || true
+
     - name: Deploy server container
       run: |
         echo "Deploying openvpn-server container..."
@@ -188,10 +195,12 @@ jobs:
           --cap-add NET_ADMIN \
           --device /dev/net/tun:/dev/net/tun \
           openvpn-server
+
     - name: Adding openvpn_internal network to openvpn server
       run: |
         echo "Adding openvpn_internal network to openvpn-server..."
         docker network connect --ip 10.10.10.100 openvpn_internal openvpn-server
+
     - name: Building openvpn-client-bookworm image
       run: |
         echo "Building openvpn-client-bookworm image ..."
@@ -199,6 +208,7 @@ jobs:
           -t openvpn-client-bookworm \
           -f testing/openvpn_client_bookworm.dockerfile \
           .
+
     - name: Deploy openvpn-client-bookworm
       run: |
         echo "Deploying openvpn-client-bookworm container..."
@@ -209,6 +219,7 @@ jobs:
           --cap-add NET_ADMIN \
           --device /dev/net/tun:/dev/net/tun \
           openvpn-client-bookworm
+
     - name: Building openvpn-client-bullseye image
       run: |
         echo "Building openvpn-client-bullseye image ..."
@@ -216,6 +227,7 @@ jobs:
           -t openvpn-client-bullseye \
           -f testing/openvpn_client_bullseye.dockerfile \
           .
+
     - name: Deploy openvpn-client-bullseye
       run: |
         echo "Deploying openvpn-client-bullseye container..."
@@ -226,6 +238,7 @@ jobs:
           --cap-add NET_ADMIN \
           --device /dev/net/tun:/dev/net/tun \
           openvpn-client-bullseye
+
     - name: Building openvpn-client-jammy image
       run: |
         echo "Building openvpn-client-jammy image ..."
@@ -233,6 +246,7 @@ jobs:
           -t openvpn-client-jammy \
           -f testing/openvpn_client_jammy.dockerfile \
           .
+
     - name: Deploy openvpn-client-jammy
       run: |
         echo "Deploying openvpn-client-jammy container..."
@@ -243,6 +257,7 @@ jobs:
           --cap-add NET_ADMIN \
           --device /dev/net/tun:/dev/net/tun \
           openvpn-client-jammy
+
     - name: Building openvpn-protected-service image
       run: |
         echo "Building openvpn-protected-service image ..."
@@ -250,6 +265,7 @@ jobs:
           -t openvpn-protected-service \
           -f testing/openvpn-protected-service.dockerfile \
           .
+
     - name: Run openvpn-protected-service container
       run: |
         docker run \
@@ -259,11 +275,13 @@ jobs:
           --ip=10.10.10.10 \
           --cap-add=NET_ADMIN \
           openvpn-protected-service
+
     - name: Run ping test
       run: |
         docker exec openvpn-client-bookworm ping 10.10.10.10 -c 100 -s 1300
         docker exec openvpn-client-bullseye ping 10.10.10.10 -c 100 -s 1300
         docker exec openvpn-client-jammy ping 10.10.10.10 -c 100 -s 1300
+
     - name: Wait for 30 seconds
       run: |
         sleep 30
@@ -273,6 +291,7 @@ jobs:
         curl -vvv http://192.168.200.100:9234/metrics
         echo "# curl -vvv http://192.168.200.100:9234/sessions_local"
         curl -vvv http://192.168.200.100:9234/sessions_local
+
   # post-clean-up:
   #   runs-on: self-hosted
   #   if: always()

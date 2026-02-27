@@ -69,8 +69,8 @@ touch "$SERV_CONF"
 
 cat > "$SERV_CONF" << 'EOF'
 # Protocol - single process handling both TCP and UDP (OpenVPN 2.7+)
-proto tcp+udp
-port 443
+local 0.0.0.0 443 udp
+local 0.0.0.0 443 tcp
 
 dev tun
 topology subnet

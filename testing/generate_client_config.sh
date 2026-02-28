@@ -12,7 +12,7 @@ for CLIENT_NAME in "${CLIENT_IMAGE_VERSIONS[@]}"; do
 client
 dev tun
 EOF
-if [[ "${CLIENT_NAME}" == "bookworm" && "${OPENVPN_VERSION}" == 2.7* ]]; then
+if [[ "${CLIENT_NAME}" == "bookworm" && "${OPENVPN_VERSION}" == v2.7* ]]; then
     echo "remote 192.168.200.100 443 udp" >> "$CLIENT_CONF"
 else
     echo "remote 192.168.200.100 443 tcp" >> "$CLIENT_CONF"

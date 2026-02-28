@@ -83,7 +83,7 @@ dh none
 
 # TLS hardening
 tls-version-min 1.3
-tls-crypt /home/openvpn/config/ta.key
+tls-crypt /home/openvpn/config/ta_crypt.key
 
 # Ciphers
 data-ciphers AES-256-GCM
@@ -104,7 +104,6 @@ max-clients 100
 # Privileges
 user openvpn
 group openvpn
-persist-key
 persist-tun
 
 # Logging & status

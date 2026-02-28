@@ -66,9 +66,13 @@ done
 # Note: DH parameters are NOT needed when using ECC/ECDH
 echo "Skipping DH parameters generation (not needed with ECDH)"
 
-# Generate TLS-Crypt key for HMAC firewall
+# Generate TLS-Crypt key for HMAC firewall / 2.6.x
 echo "Generating TLS-Crypt key for HMAC firewall"
 openvpn --genkey secret /home/openvpn/config/ta.key
+
+# Generate TLS-Crypt key for HMAC firewall / 2.7.x
+echo "Generating TLS-Crypt key for HMAC firewall"
+openvpn --genkey tls-crypt /home/openvpn/config/ta_crypt.key
 
 # Show generated files
 echo "####"

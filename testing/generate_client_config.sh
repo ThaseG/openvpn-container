@@ -1,24 +1,19 @@
 #!/bin/bash
-# Define the array of client configuration paths
 source versions.sh
 
-# Loop through each client configuration
 for CLIENT_NAME in "${CLIENT_IMAGE_VERSIONS[@]}"; do
     CLIENT_CONF="/home/openvpn/config/client-${CLIENT_NAME}.conf"
     
     echo "Generating client configuration file: $CLIENT_CONF"
     
-    # Create/truncate the file
     > "$CLIENT_CONF"
     
-    # Generate client configuration
     cat >> "$CLIENT_CONF" << 'EOF'
 client
 dev tun
 remote 192.168.200.100 443 tcp
 resolv-retry infinite
 nobind
-persist-key
 persist-tun
 EOF
     
@@ -34,35 +29,28 @@ EOF
     cat /home/openvpn/config/ca/ca.crt >> "$CLIENT_CONF"
     echo "</ca>" >> "$CLIENT_CONF"
     
-    # TLS directive depends on OpenVPN version
     if [[ "${OPENVPN_VERSION}" == 2.7* ]]; then
+        echo "<tls-crypt>" >> "$CLIENT_CONF"
+        cat /home/openvpn/config/ta_crypt.key >> "$CLIENT_CONF"
+        echo "</tls-crypt>" >> "$CLIENT_CONF"
         cat >> "$CLIENT_CONF" << 'EOF'
-<tls-crypt>
-EOF
-        cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
-        cat >> "$CLIENT_CONF" << 'EOF'
-</tls-crypt>
 data-ciphers AES-256-GCM
+verb 3
 EOF
     elif [[ "${OPENVPN_VERSION}" == 2.6* ]]; then
+        echo "<tls-crypt>" >> "$CLIENT_CONF"
+        cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
+        echo "</tls-crypt>" >> "$CLIENT_CONF"
         cat >> "$CLIENT_CONF" << 'EOF'
 key-direction 1
-<tls-auth>
-EOF
-        cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
-        cat >> "$CLIENT_CONF" << 'EOF'
-</tls-auth>
 cipher AES-256-GCM
 data-ciphers AES-256-GCM
 data-ciphers-fallback AES-256-CBC
+verb 3
 EOF
     else
         echo "WARNING: Unsupported OPENVPN_VERSION '${OPENVPN_VERSION}', skipping TLS config for ${CLIENT_NAME}"
     fi
-
-    cat >> "$CLIENT_CONF" << 'EOF'
-verb 3
-EOF
     
     echo "### CLIENT CONFIG: $CLIENT_CONF ###"
     cat "$CLIENT_CONF"

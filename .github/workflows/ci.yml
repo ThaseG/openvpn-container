@@ -28,6 +28,7 @@ jobs:
         echo ""
         echo "Stop complete. Remaining running containers:"
         docker ps
+
     - name: Removing stopped containers
       run: |
         echo ""
@@ -46,6 +47,7 @@ jobs:
         echo ""
         echo "Cleanup complete. Remaining containers:"
         docker ps -a
+
     - name: Remove all Docker images
       run: |
         echo "Fetching list of all Docker images..."
@@ -72,6 +74,7 @@ jobs:
         echo ""
         echo "Cleanup complete. Remaining images:"
         docker images
+
     - name: Remove all Docker networks and volumes
       run: |
         echo "=== Removing Docker Networks ==="
@@ -94,6 +97,7 @@ jobs:
         echo "Remaining networks:"
         docker network ls
         echo ""
+
     - name: Remove all Docker networks and volumes
       run: |
         
@@ -113,6 +117,7 @@ jobs:
         echo ""
         echo "Remaining volumes:"
         docker volume ls
+
   BUILD-openvpn-server-image:
     runs-on: self-hosted
     needs: pre-clean-up

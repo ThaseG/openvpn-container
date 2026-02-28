@@ -29,7 +29,7 @@ EOF
     cat /home/openvpn/config/ca/ca.crt >> "$CLIENT_CONF"
     echo "</ca>" >> "$CLIENT_CONF"
     
-    if [[ "${OPENVPN_VERSION}" == 2.7* ]]; then
+    if [[ "${OPENVPN_VERSION}" == v2.7* ]]; then
         echo "<tls-crypt>" >> "$CLIENT_CONF"
         cat /home/openvpn/config/ta_crypt.key >> "$CLIENT_CONF"
         echo "</tls-crypt>" >> "$CLIENT_CONF"
@@ -37,7 +37,7 @@ EOF
 data-ciphers AES-256-GCM
 verb 3
 EOF
-    elif [[ "${OPENVPN_VERSION}" == 2.6* ]]; then
+    elif [[ "${OPENVPN_VERSION}" == v2.6* ]]; then
         echo "<tls-crypt>" >> "$CLIENT_CONF"
         cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
         echo "</tls-crypt>" >> "$CLIENT_CONF"

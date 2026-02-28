@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "${OPENVPN_VERSION}" == 2.6* ]]; then
+if [[ "${OPENVPN_VERSION}" == v2.6* ]]; then
 
 # Define the paths
 SERV_TCP_CONF="/home/openvpn/config/server-tcp.conf"

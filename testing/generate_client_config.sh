@@ -45,9 +45,9 @@ data-ciphers AES-256-GCM
 verb 3
 EOF
     elif [[ "${OPENVPN_VERSION}" == v2.6* ]]; then
-        echo "<tls-crypt>" >> "$CLIENT_CONF"
+        echo "<tls-auth>" >> "$CLIENT_CONF"
         cat /home/openvpn/config/ta.key >> "$CLIENT_CONF"
-        echo "</tls-crypt>" >> "$CLIENT_CONF"
+        echo "</tls-auth>" >> "$CLIENT_CONF"
         cat >> "$CLIENT_CONF" << 'EOF'
 key-direction 1
 cipher AES-256-GCM

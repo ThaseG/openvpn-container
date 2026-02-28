@@ -1,4 +1,5 @@
 #!/bin/bash
+source versions.sh
 
 if [[ "${OPENVPN_VERSION}" == v2.6* ]]; then
 

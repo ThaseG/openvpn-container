@@ -11,10 +11,17 @@ for CLIENT_NAME in "${CLIENT_IMAGE_VERSIONS[@]}"; do
     cat >> "$CLIENT_CONF" << 'EOF'
 client
 dev tun
-remote 192.168.200.100 443 tcp
+EOF
+if [[ "${CLIENT_NAME}" == "bookworm" && "${OPENVPN_VERSION}" == 2.7* ]]; then
+    echo "remote 192.168.200.100 443 udp" >> "$CLIENT_CONF"
+else
+    echo "remote 192.168.200.100 443 tcp" >> "$CLIENT_CONF"
+fi
+cat >> "$CLIENT_CONF" << 'EOF'
 resolv-retry infinite
 nobind
 persist-tun
+auth-nocache
 EOF
     
     echo "<cert>" >> "$CLIENT_CONF"

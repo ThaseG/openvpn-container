@@ -47,7 +47,7 @@ FROM debian:12-slim AS go-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV GO_VERSION=1.25.7
-ENV OPENVPN_EXPORTER_VERSION=v1.0.3
+ENV OPENVPN_EXPORTER_VERSION=v1.1.0
 ENV GOPATH=/go
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
@@ -68,8 +68,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone and build exporter
-#RUN git clone --depth 1 --branch ${OPENVPN_EXPORTER_VERSION} https://github.com/ThaseG/openvpn-exporter /build && \
-RUN git clone --depth 1 https://github.com/ThaseG/openvpn-exporter /build && \
+RUN git clone --depth 1 --branch ${OPENVPN_EXPORTER_VERSION} https://github.com/ThaseG/openvpn-exporter /build && \
     go mod tidy && \
     go mod download && \
     go mod verify && \

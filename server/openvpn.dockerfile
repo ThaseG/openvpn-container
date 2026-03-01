@@ -5,7 +5,7 @@
 FROM debian:12-slim AS openvpn-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV OPENVPN_VERSION=v2.6.19
+ENV OPENVPN_VERSION=v2.7.0
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -68,7 +68,8 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone and build exporter
-RUN git clone --depth 1 --branch ${OPENVPN_EXPORTER_VERSION} https://github.com/ThaseG/openvpn-exporter /build && \
+#RUN git clone --depth 1 --branch ${OPENVPN_EXPORTER_VERSION} https://github.com/ThaseG/openvpn-exporter /build && \
+RUN git clone --depth 1 https://github.com/ThaseG/openvpn-exporter /build && \
     go mod tidy && \
     go mod download && \
     go mod verify && \

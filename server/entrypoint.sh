@@ -26,6 +26,9 @@ fi
 if [ -f "$LOG_DIR/openvpn-udp-status" ]; then
     cp "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-udp-status.backup"
 fi
+if [ -f "$LOG_DIR/openvpn-status" ]; then
+    cp "$LOG_DIR/openvpn-status" "$LOG_DIR/openvpn-status.backup"
+fi
 
 # Pre-create status files with correct ownership and permissions
 echo "Pre-creating status files..."

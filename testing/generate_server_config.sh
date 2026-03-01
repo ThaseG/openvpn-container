@@ -108,7 +108,7 @@ group openvpn
 persist-tun
 
 # Logging & status
-status /home/openvpn/logs/openvpn-tcp-status
+status /home/openvpn/logs/openvpn-status
 status-version 3
 log-append /home/openvpn/logs/openvpn.log
 push-peer-info

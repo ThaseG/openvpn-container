@@ -32,9 +32,9 @@ fi
 
 # Pre-create status files with correct ownership and permissions
 echo "Pre-creating status files..."
-touch "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status"
-chown openvpn:openvpn "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status"
-chmod 644 "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status"
+touch "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-status"
+chown openvpn:openvpn "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-status"
+chmod 644 "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-status"
 
 # Implement iptables rules if the config file exists
 if [ -f "$CONFIG_DIR/iptables.sh" ]; then
@@ -96,6 +96,9 @@ sleep 2
 # Fix permissions on status files after OpenVPN creates them (just in case)
 sudo chown openvpn:openvpn "$LOG_DIR"/openvpn-*-status 2>/dev/null || true
 sudo chmod 644 "$LOG_DIR"/openvpn-*-status 2>/dev/null || true
+# 2.7.x fix
+sudo chown openvpn:openvpn "$LOG_DIR"/openvpn-status 2>/dev/null || true
+sudo chmod 644 "$LOG_DIR"/openvpn-status 2>/dev/null || true
 
 # Start the openvpn-exporter
 if [ -f /home/openvpn/exporter/openvpn-exporter ]; then

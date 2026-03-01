@@ -140,6 +140,10 @@ WORKDIR /home/openvpn
 # Expose ports
 EXPOSE 443/tcp 443/udp 9234/tcp
 
+# Healthcheck: OpenVPN is actually running (probe_success == 1)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -sf http://localhost:9234/metrics | grep -q 'probe_success{version="[^"]*"} 1'
+
 USER openvpn
 
 ENTRYPOINT ["/home/openvpn/entrypoint.sh"]

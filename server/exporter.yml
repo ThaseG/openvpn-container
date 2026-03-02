@@ -1,10 +1,20 @@
 # OpenVPN Exporter Configuration
 
-# Path to OpenVPN TCP status file
+# Path to OpenVPN TCP status file / 2.6.x
 ovpn_tcp_status: /home/openvpn/logs/openvpn-tcp-status
 
-# Path to OpenVPN UDP status file
+# Path to OpenVPN UDP status file / 2.6.x
 ovpn_udp_status: /home/openvpn/logs/openvpn-udp-status
+
+# Path to OpenVPN common status file / 2.7.x
+ovpn_status: /home/openvpn/logs/openvpn-status
 
 # Server name to display in metrics and sessions
 server_name: openvpn-server
+
+# How often to read status files and refresh metrics (seconds, default: 15)
+refresh_interval: 15
+
+# Enable debug logging (default: false)
+# When false, collection cycle log messages are suppressed
+debug: false

@@ -5,6 +5,7 @@ set -e # Exit on error
 COMMON_CONF="/home/openvpn/config/server-common.conf"
 TCP_CONF="/home/openvpn/config/server-tcp.conf"
 UDP_CONF="/home/openvpn/config/server-udp.conf"
+ONE_CONF="/home/openvpn/config/server.conf" # One config supporting both tcp & udp since 2.7.*
 LOG_DIR="/home/openvpn/logs"
 CONFIG_DIR="/home/openvpn/config"
 
@@ -25,12 +26,15 @@ fi
 if [ -f "$LOG_DIR/openvpn-udp-status" ]; then
     cp "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-udp-status.backup"
 fi
+if [ -f "$LOG_DIR/openvpn-status" ]; then
+    cp "$LOG_DIR/openvpn-status" "$LOG_DIR/openvpn-status.backup"
+fi
 
 # Pre-create status files with correct ownership and permissions
 echo "Pre-creating status files..."
-touch "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status"
-chown openvpn:openvpn "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status"
-chmod 644 "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status"
+touch "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-status"
+chown openvpn:openvpn "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-status"
+chmod 644 "$LOG_DIR/openvpn-tcp-status" "$LOG_DIR/openvpn-udp-status" "$LOG_DIR/openvpn-status"
 
 # Implement iptables rules if the config file exists
 if [ -f "$CONFIG_DIR/iptables.sh" ]; then
@@ -39,10 +43,12 @@ if [ -f "$CONFIG_DIR/iptables.sh" ]; then
     sudo "$CONFIG_DIR/iptables.sh"
 fi
 
-# Check if the common configuration file exists
-if [ ! -f "$COMMON_CONF" ]; then
-    echo "ERROR: Common configuration not found at $COMMON_CONF"
-    exit 1
+# Check if the common configuration file exists / but only in old version 2.6.*
+if [ ! -f "$ONE_CONF" ]; then
+    if [ ! -f "$COMMON_CONF" ]; then
+        echo "ERROR: Common configuration not found at $COMMON_CONF"
+        exit 1
+    fi
 fi
 
 # Array to track background PIDs
@@ -68,6 +74,16 @@ else
     echo "WARNING: UDP configuration not found at $UDP_CONF"
 fi
 
+# Start Common instance if config exists / since 2.7*
+if [ -f "$ONE_CONF" ]; then
+    echo "Starting OpenVPN with one configuration (both tcp & udp)..."
+    sudo openvpn --config "$ONE_CONF" &
+    pids+=($!)
+    echo "OpenVPN started with PID ${pids[-1]}"
+else
+    echo "WARNING: Configuration not found at $ONE_CONF"
+fi
+
 # Check if at least one OpenVPN instance started
 if [ ${#pids[@]} -eq 0 ]; then
     echo "ERROR: No OpenVPN instances started. No TCP or UDP configuration found."
@@ -80,6 +96,9 @@ sleep 2
 # Fix permissions on status files after OpenVPN creates them (just in case)
 sudo chown openvpn:openvpn "$LOG_DIR"/openvpn-*-status 2>/dev/null || true
 sudo chmod 644 "$LOG_DIR"/openvpn-*-status 2>/dev/null || true
+# 2.7.x fix
+sudo chown openvpn:openvpn "$LOG_DIR"/openvpn-status 2>/dev/null || true
+sudo chmod 644 "$LOG_DIR"/openvpn-status 2>/dev/null || true
 
 # Start the openvpn-exporter
 if [ -f /home/openvpn/exporter/openvpn-exporter ]; then

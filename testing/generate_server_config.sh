@@ -1,4 +1,7 @@
 #!/bin/bash
+source versions.sh
+
+if [[ "${OPENVPN_VERSION}" == v2.6* ]]; then
 
 # Define the paths
 SERV_TCP_CONF="/home/openvpn/config/server-tcp.conf"
@@ -56,6 +59,66 @@ echo "Logging of client and server config files"
 echo "### SERVER CONFIG ###"
 cat $SERV_TCP_CONF
 cat $SERV_COMMON_CONF
+
+else # If v2.7 or higher
+
+SERV_CONF="/home/openvpn/config/server.conf"
+
+echo "Generating configuration file for server..."
+
+touch "$SERV_CONF"
+
+cat > "$SERV_CONF" << 'EOF'
+# Protocol - single process handling both TCP and UDP (OpenVPN 2.7+)
+local 0.0.0.0 443 udp
+local 0.0.0.0 443 tcp
+
+dev tun
+topology subnet
+
+# PKI
+ca /home/openvpn/config/ca/ca.crt
+cert /home/openvpn/config/server.crt
+key /home/openvpn/config/server.key
+dh none
+
+# TLS hardening
+tls-version-min 1.3
+tls-crypt /home/openvpn/config/ta_crypt.key
+
+# Ciphers
+data-ciphers AES-256-GCM
+
+# Networking
+server 10.0.0.0 255.255.255.0
+push "route 0.0.0.0 0.0.0.0"
+push "dhcp-option DNS 1.1.1.1"
+push "dhcp-option DNS 8.8.8.8"
+keepalive 10 120
+txqueuelen 15000
+tcp-nodelay
+
+# Session
+reneg-sec 14400
+max-clients 100
+
+# Privileges
+user openvpn
+group openvpn
+persist-tun
+
+# Logging & status
+status /home/openvpn/logs/openvpn-status
+status-version 3
+log-append /home/openvpn/logs/openvpn.log
+push-peer-info
+verb 4
+EOF
+
+echo "### SERVER CONFIG ###"
+cat "$SERV_CONF"
+
+fi
 
 # Wait for all background processes to finish
 wait

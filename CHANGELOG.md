@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 | Version | Release Date | Release Notes | Fixed | Known bugs |
 | ------- | ------------ | ------------- | ----- | ---------- |
+| v1.1.1  | 2026-03-26   | **OpenVPN Version**: `2.7.0` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.25.8` </br> **Ubuntu Version**: `24.04` | Fixed golang [CVE-2026-25679](https://avd.aquasec.com/nvd/2026/cve-2026-25679/) <br> Added sleep when no config exist to give time to check/fix/replace it | No |
 | v1.1.0  | 2026-02-13   | **OpenVPN Version**: `2.7.0` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.25.7` </br> **Ubuntu Version**: `24.04` | Added Healthcheck parameter in main server dockerfile | No |
 | v1.0.6  | 2026-02-22   | **OpenVPN Version**: `2.6.19` </br> **OpenVPN Exporter Version**: `1.0.3` </br> **golang Version**: 1.25.7 </br> **Ubuntu Version**: `24.04` | New exporter version | No |
 | v1.0.5  | 2026-02-12   | **OpenVPN Version**: `2.6.19` </br> **golang Version**: `1.25.7` </br> **Ubuntu Version**: `24.04` | [CVE-2025-68121](https://nvd.nist.gov/vuln/detail/cve-2025-68121) for Golang version fixed | No |

@@ -47,7 +47,6 @@ fi
 if [ ! -f "$ONE_CONF" ]; then
     if [ ! -f "$COMMON_CONF" ]; then
         echo "ERROR: Common configuration not found at $COMMON_CONF"
-        exit 1
     fi
 fi
 
@@ -86,7 +85,8 @@ fi
 
 # Check if at least one OpenVPN instance started
 if [ ${#pids[@]} -eq 0 ]; then
-    echo "ERROR: No OpenVPN instances started. No TCP or UDP configuration found."
+    echo "ERROR: No OpenVPN instances started. No TCP or UDP configuration found. Container will exit in 300 seconds..."
+    sleep 300 # We wanna keep the container running for some time, so that we can check/correct configuration
     exit 1
 fi
 

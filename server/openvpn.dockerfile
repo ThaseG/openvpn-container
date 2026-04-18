@@ -46,7 +46,7 @@ RUN git clone https://github.com/OpenVPN/openvpn.git /opt/openvpn && \
 FROM debian:12-slim AS go-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV GO_VERSION=1.25.8
+ENV GO_VERSION=1.26.2
 ENV OPENVPN_EXPORTER_VERSION=v1.1.0
 ENV GOPATH=/go
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin

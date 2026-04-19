@@ -47,7 +47,7 @@ echo "Generating client CSRs"
 for client in "${CLIENT_IMAGE_VERSIONS[@]}"; do
     openssl req -new -key /home/openvpn/config/${client}.key \
         -out /home/openvpn/config/${client}.csr \
-        -subj "/C=SK/L=Kosice/O=Test/OU=Test/CN=${client} openvpn.com"
+        -subj "/C=SK/L=Kosice/O=Test/OU=Test/CN=${client}.openvpn.com"
     echo "✓ Generated CSR for ${client}"
 done
 

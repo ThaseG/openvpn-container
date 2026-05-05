@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 | Version | Release Date | Release Notes | Fixed | Known bugs |
 | ------- | ------------ | ------------- | ----- | ---------- |
-| v1.1.4  | 2026-04-28   | **OpenVPN Version**: `2.7.3` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.26.2` </br> **Ubuntu Version**: `24.04` | Golang updated to fix vulnerabilities: [CVE-2026-32282](https://nvd.nist.gov/vuln/detail/CVE-2026-32282) & [CVE-2026-32280](https://nvd.nist.gov/vuln/detail/CVE-2026-32280) | No |
+| v1.1.6  | 2026-05-05   | **OpenVPN Version**: `2.7.4` </br> **OpenVPN Exporter Version**: `1.1.1` </br> **golang Version**: `1.26.2` </br> **Ubuntu Version**: `24.04` | Nothing | No |
+| v1.1.5  | 2026-04-28   | **OpenVPN Version**: `2.7.3` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.26.2` </br> **Ubuntu Version**: `24.04` | Golang updated to fix vulnerabilities: [CVE-2026-32282](https://nvd.nist.gov/vuln/detail/CVE-2026-32282) & [CVE-2026-32280](https://nvd.nist.gov/vuln/detail/CVE-2026-32280) | No |
 | v1.1.3  | 2026-04-18   | **OpenVPN Version**: `2.7.2` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.26.2` </br> **Ubuntu Version**: `24.04` | Golang updated to fix vulnerabilities: [CVE-2026-32282](https://nvd.nist.gov/vuln/detail/CVE-2026-32282) & [CVE-2026-32280](https://nvd.nist.gov/vuln/detail/CVE-2026-32280) | No |
 | v1.1.2  | 2026-04-08   | **OpenVPN Version**: `2.7.1` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.25.8` </br> **Ubuntu Version**: `24.04` | Nothing | No |
 | v1.1.1  | 2026-03-26   | **OpenVPN Version**: `2.7.0` </br> **OpenVPN Exporter Version**: `1.1.0` </br> **golang Version**: `1.25.8` </br> **Ubuntu Version**: `24.04` | Fixed golang [CVE-2026-25679](https://avd.aquasec.com/nvd/2026/cve-2026-25679/) <br> Added sleep when no config exist to give time to check/fix/replace it | No |

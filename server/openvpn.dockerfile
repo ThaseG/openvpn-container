@@ -5,7 +5,7 @@
 FROM debian:12-slim AS openvpn-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV OPENVPN_VERSION=v2.7.4
+ENV OPENVPN_VERSION=v2.7.5
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -46,7 +46,7 @@ RUN git clone https://github.com/OpenVPN/openvpn.git /opt/openvpn && \
 FROM debian:12-slim AS go-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV GO_VERSION=1.26.2
+ENV GO_VERSION=1.26.4
 ENV OPENVPN_EXPORTER_VERSION=v1.1.1
 ENV GOPATH=/go
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin

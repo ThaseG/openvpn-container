@@ -19,20 +19,26 @@ Exporter used in this project is from a dedicated [repository here.](https://git
 ## Configuration
 ### Required Files
 
-Mount these files to /home/openvpn/config/:
+Mount these files to /home/openvpn/config/: (for OpenVPN 2.6.x)
 
 - `server-common.conf` - Common OpenVPN settings (required)
 - `server-tcp.conf` - TCP-specific configuration (optional)
 - `server-udp.conf` - UDP-specific configuration (optional)
 - `iptables.sh` - Custom firewall rules (optional)
 
+Mount these files to /home/openvpn/config/: (for OpenVPN 2.7.x)
+
+- `server.conf` - Common OpenVPN settings (required)
+- `iptables.sh` - Custom firewall rules (optional)
+
 ### Configuration Structure
 
 ```
 /home/openvpn/config/
-├── server-common.conf    # Shared settings
-├── server-tcp.conf       # TCP instance config
-├── server-udp.conf       # UDP instance config
+├── server.conf           # One common server config (OpenVPN 2.7.x)
+├── server-common.conf    # Shared server config (OpenVPN 2.6.x, not used since 2.7.x)
+├── server-tcp.conf       # TCP instance config (OpenVPN 2.6.x, not used since 2.7.x)
+├── server-udp.conf       # UDP instance config (OpenVPN 2.6.x, not used since 2.7.x)
 ├── iptables.sh           # Firewall rules (optional)
 ├── ca.crt                # Certificate Authority
 ├── server.crt            # Server certificate
@@ -49,5 +55,3 @@ MIT License - feel free to use and modify as needed.
  - the [CONTRIBUTING](./CONTRIBUTING.md) document describes how to contribute to the repository
  - in case of need, please contact owner group : [ThaseG](mailto:andrej@hyben.net)
  - see [Changelog](./CHANGELOG.md) for release information.
- - check [Upgrade procedure](./UPGRADE.md) to see how to create new openvpn container image.
- - check [Tests](./Tests.md) to see how automated tests works within this repository to verify version.

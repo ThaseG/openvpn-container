@@ -18,7 +18,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Stop all running Docker containers
       run: |
         echo "Fetching list of all running Docker containers..."
@@ -106,9 +106,6 @@ jobs:
         docker network ls
         echo ""
 
-    - name: Remove all Docker networks and volumes
-      run: |
-        
         echo "=== Removing Docker Volumes ==="
         echo "Fetching list of all Docker volumes..."
         docker volume ls --format "{{.Name}}" | while read -r volume; do
@@ -121,7 +118,13 @@ jobs:
                 fi
             fi
         done
-        
+
+        # Catch anything the loop missed. Since Docker 23, `volume prune` only
+        # removes anonymous volumes unless --all is given; fall back for older
+        # engines that do not know the flag.
+        echo "Pruning all unused volumes..."
+        docker volume prune --all --force 2>/dev/null || docker volume prune --force
+
         echo ""
         echo "Remaining volumes:"
         docker volume ls
@@ -138,7 +141,7 @@ jobs:
     runs-on: self-hosted
     needs: pre-clean-up
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Build Docker image
       run: |
         docker build --no-cache -t openvpn-server:latest -f ./server/openvpn.dockerfile .
@@ -146,23 +149,48 @@ jobs:
   TEST-trivy-vulnerability-scan:
     runs-on: self-hosted
     needs: BUILD-openvpn-server-image
+    env:
+      # :latest = newest Trivy release; :canary = nightly build from main
+      TRIVY_IMAGE: ghcr.io/aquasecurity/trivy:latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
+    - name: Pull latest Trivy image
+      run: |
+        docker pull "$TRIVY_IMAGE"
+        docker run --rm "$TRIVY_IMAGE" --version
     - name: Run Trivy vulnerability scanner
       run: |
-        trivy image \
-          --severity HIGH,CRITICAL \
-          --ignorefile .trivyignore \
-          --exit-code 1 \
-          --no-progress \
-          --format table \
-          openvpn-server:latest
+        set +e
+        # Trivy reads the locally built image through the Docker socket. The
+        # report goes to stdout and is written by the runner user, so no
+        # root-owned files are left in the workspace.
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v "$PWD/.trivyignore:/trivyignore:ro" \
+          -v trivy-cache:/root/.cache/trivy \
+          "$TRIVY_IMAGE" image \
+            --severity HIGH,CRITICAL \
+            --ignorefile /trivyignore \
+            --exit-code 1 \
+            --no-progress \
+            --format table \
+            openvpn-server:latest > trivy-report.txt
+        rc=$?
+        cat trivy-report.txt
+        {
+          echo "## Trivy scan (HIGH, CRITICAL) - $(docker run --rm "$TRIVY_IMAGE" --version | head -1)"
+          if [ "$rc" -eq 0 ]; then echo "No unignored vulnerabilities found."; fi
+          echo '```'
+          cat trivy-report.txt
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
+        exit "$rc"
 
   TEST-e2e:
     runs-on: self-hosted
     needs: TEST-trivy-vulnerability-scan
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Create openvpn network
       run: |
         echo "Creating openvpn networks"
@@ -319,7 +347,7 @@ jobs:
     needs: TEST-e2e
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Stop all running Docker containers
       run: |
         echo "Fetching list of all running Docker containers..."
@@ -407,9 +435,6 @@ jobs:
         docker network ls
         echo ""
 
-    - name: Remove all Docker networks and volumes
-      run: |
-        
         echo "=== Removing Docker Volumes ==="
         echo "Fetching list of all Docker volumes..."
         docker volume ls --format "{{.Name}}" | while read -r volume; do
@@ -422,7 +447,13 @@ jobs:
                 fi
             fi
         done
-        
+
+        # Catch anything the loop missed. Since Docker 23, `volume prune` only
+        # removes anonymous volumes unless --all is given; fall back for older
+        # engines that do not know the flag.
+        echo "Pruning all unused volumes..."
+        docker volume prune --all --force 2>/dev/null || docker volume prune --force
+
         echo ""
         echo "Remaining volumes:"
         docker volume ls

@@ -126,6 +126,14 @@ jobs:
         echo "Remaining volumes:"
         docker volume ls
 
+    - name: Prune old images and Trivy cache
+      run: |
+        echo "Pruning images older than 24h..."
+        docker image prune -f
+
+        echo "Removing trivy-cache volume..."
+        docker volume rm trivy-cache 2>/dev/null || echo "⊘ trivy-cache volume not present (skipping)"
+
   BUILD-openvpn-server-image:
     runs-on: self-hosted
     needs: pre-clean-up
@@ -418,3 +426,11 @@ jobs:
         echo ""
         echo "Remaining volumes:"
         docker volume ls
+
+    - name: Prune old images and Trivy cache
+      run: |
+        echo "Pruning images older than 24h..."
+        docker image prune -f
+
+        echo "Removing trivy-cache volume..."
+        docker volume rm trivy-cache 2>/dev/null || echo "⊘ trivy-cache volume not present (skipping)"

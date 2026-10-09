@@ -2,9 +2,17 @@ name: Validation Workflow
 
 on:
   push:
-    branches: [ '**' ]
+    # automation/** branches are tested through their pull request instead
+    branches: [ '**', '!automation/**' ]
   pull_request:
     branches: [ main ]
+
+# All jobs share one self-hosted runner and fixed container/network names, so
+# runs must not overlap (e.g. a push run and a pull request run).
+concurrency:
+  group: self-hosted-validation
+  cancel-in-progress: false
+
 jobs:
   pre-clean-up:
     runs-on: self-hosted

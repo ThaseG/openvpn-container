@@ -1,0 +1,62 @@
+name: Weekly Version Check
+
+# Checks for new OpenVPN, openvpn-exporter and Go releases every Wednesday and
+# opens (or updates) a pull request with the version bump and a changelog
+# entry. The Validation Workflow then builds and tests the PR.
+#
+# Requires the repository secret VERSION_UPDATE_TOKEN: a fine-grained personal
+# access token for this repository with "Contents: Read and write" and
+# "Pull requests: Read and write". Pull requests opened with the default
+# GITHUB_TOKEN do not trigger other workflows, so without it CI would not run
+# on the pull request.
+
+on:
+  schedule:
+    - cron: '0 6 * * 3'   # Wednesdays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: version-updates
+  cancel-in-progress: false
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Check upstream releases
+      id: check
+      run: scripts/check-updates.sh > "$RUNNER_TEMP/pr-body.md"
+
+    - name: Write job summary
+      run: cat "$RUNNER_TEMP/pr-body.md" >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Check token
+      if: steps.check.outputs.changed == 'true'
+      env:
+        TOKEN: ${{ secrets.VERSION_UPDATE_TOKEN }}
+      run: |
+        if [ -z "$TOKEN" ]; then
+          echo "::error::Secret VERSION_UPDATE_TOKEN is not set - cannot open a pull request that triggers CI."
+          exit 1
+        fi
+
+    - name: Open or update pull request
+      if: steps.check.outputs.changed == 'true'
+      uses: peter-evans/create-pull-request@v8
+      with:
+        token: ${{ secrets.VERSION_UPDATE_TOKEN }}
+        branch: automation/version-updates
+        base: main
+        delete-branch: true
+        commit-message: ${{ steps.check.outputs.title }}
+        title: ${{ steps.check.outputs.title }}
+        body-path: ${{ runner.temp }}/pr-body.md
+        add-paths: |
+          versions.sh
+          server/openvpn.dockerfile
+          CHANGELOG.md

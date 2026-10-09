@@ -8,4 +8,4 @@ OPENVPN_VERSION='v2.7.8'
 OPENVPN_EXPORTER_VERSION='v1.1.1'
 GO_VERSION='1.27.2'
 
-CLIENT_IMAGE_VERSIONS=("bullseye" "bookworm" "jammy")
+CLIENT_IMAGE_VERSIONS=("bookworm" "jammy")
